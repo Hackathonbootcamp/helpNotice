@@ -1,8 +1,10 @@
 # help_notice
 
-確認くんの通知周り担当
+## デプロイ先
 
-テーブル情報
+http://helpnotice.herokuapp.com/
+
+## 暫定的に作成したテーブルレイアウト
 <pre>
 create table help (
 help_id serial primary key,
