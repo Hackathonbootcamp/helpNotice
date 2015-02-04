@@ -59,13 +59,13 @@
 (defroutes app-routes
   (GET "/" [] "running")
   (GET "/helpme" {params :params}
-       (helpme (Integer/valueOf (params :need_help_id)) (Integer/valueOf (params :severity)) (bigdec (params :latitude)) (bigdec(params :longitude))))
+       (helpme (Long/valueOf (params :need_help_id)) (Integer/valueOf (params :severity)) (bigdec (params :latitude)) (bigdec(params :longitude))))
   (GET "/match" {params :params}
-       (match (Integer/valueOf (params :help_id))))
+       (match (Long/valueOf (params :help_id))))
   (GET "/notice" {params :params}
-       (notice (Integer/valueOf (params :help_id)) (Integer/valueOf (params :helper_id))))
+       (notice (Long/valueOf (params :help_id)) (Long/valueOf (params :helper_id))))
   (GET "/helped" {params :params}
-       (helped (Integer/valueOf (params :help_id)) (Integer/valueOf (params :helper_id))))
+       (helped (Long/valueOf (params :help_id)) (Long/valueOf (params :helper_id))))
   (route/not-found "Not Found"))
 
 (def app

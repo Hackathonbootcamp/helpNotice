@@ -7,9 +7,9 @@ http://helpnotice.herokuapp.com/
 ## 暫定的に作成したテーブルレイアウト
 <pre>
 create table help (
-help_id serial primary key,
-need_help_id integer,
-helper_id integer,
+help_id bigserial primary key,
+need_help_id bigint,
+helper_id bigint,
 severity integer,
 help_latitude numeric(8,6),
 help_longitude numeric(9,6),
@@ -18,21 +18,21 @@ helped_datetime timestamp);
 </pre>
 <pre>
 create table base (
-base_id integer primary key,
-base_name varchar(256),
+base_id bigint primary key,
+base_name text,
 base_latitude numeric(8,6),
 base_longitude numeric(9,6));
 </pre>
 <pre>
 create table helper(
-helper_id integer primary key,
-helper_name varchar(256),
-social_id varchar(256));
+helper_id bigint primary key,
+helper_name text,
+social_id text);
 </pre>
 <pre>
 create table helper_base(
-helper_id integer,
-base_id integer,
+helper_id bigint,
+base_id bigint,
 primary key (helper_id, base_id));
 </pre>
 
