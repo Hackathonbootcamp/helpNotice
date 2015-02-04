@@ -47,7 +47,7 @@ primary key (helper_id, base_id));
 * help_idによる登録済みデータを元にhelperマッチング
 * マッチング結果に対するtwitter通知
 
-## /notice?help_id&params :helper_id
+## /notice?help_id&helper_id
 
 * help_idによる登録済みデータを元に、helper_idに対してtwitter通知
 
