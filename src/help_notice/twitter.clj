@@ -1,9 +1,5 @@
 (in-ns 'help-notice.handler)
 
-; 経度・緯度からgogleのurlを取得
-(defn get-gmurl [latitude longitude]
-  (str "http://maps.google.com/maps?q=" latitude "," longitude))
-
 ; 緊急度メッセージを作成
 (defn make-severity-msg [severity]
   (if (= 1 severity) "今助けてほしい！" (if (= 2 severity) "今日助けてほしい！" "今週助けてほしい！")))
@@ -16,7 +12,6 @@
 (defn make-twitter-msg [severity latitude longitude help_id helper_id]
   (str
    (make-severity-msg severity) "\n"
-   (get-gmurl latitude longitude) "\n"
    (make-helped-url help_id helper_id)))
 
 (def my-creds (make-oauth-creds "2sEcph9BOK5Hk412wQ8qJaSI1"

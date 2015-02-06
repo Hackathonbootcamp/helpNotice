@@ -47,7 +47,12 @@ function getHelpInfo() {
        + json.latitude + "," + json.longitude
        + "&zoom=15&format=png&sensor=false&size=480x480&maptype=roadmap&markers="
        + json.latitude + "," + json.longitude;
+
+      var gmap = "http://maps.google.com/maps?q="
+       + json.latitude + "," + json.longitude;
+
       $("#gsrc").attr({'src':gurl});
+      $("#gmap").attr({'href': gmap});
     }
   });
 }
