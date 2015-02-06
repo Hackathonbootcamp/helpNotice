@@ -9,6 +9,9 @@ $(document).ready(function(){
     getHelpInfo();
   } else {
     swal("不正な画面表示です！")
+    $(".container-narrow").empty();
+    $("body").append("<h1>Error</h1>");
+    return;
   }
 
   $(document).on('click', '#helpbtn', helped);
@@ -33,6 +36,13 @@ function getHelpInfo() {
     url: url,
     dataType: 'json',
     success: function(json){
+      if (!json.datetime) {
+        swal("不正な画面表示です！")
+        $(".container-narrow").empty();
+        $("body").append("<h1>Error</h1>");
+        return;
+      }
+
       $("#severity").text(json.severity);
       $("#datetime").text(json.datetime);
       $("#need_help_name").text(json.need_help_name);
@@ -53,6 +63,8 @@ function getHelpInfo() {
 
       $("#gsrc").attr({'src':gurl});
       $("#gmap").attr({'href': gmap});
+
+      $(".container-narrow").show();
     }
   });
 }
