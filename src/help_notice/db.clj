@@ -58,3 +58,32 @@
 (defn get-need-helper [need_help_id]
   (j/query postgresql-db
            ["select need_help_id, need_help_name, need_help_address, need_help_tel from need_helper where need_help_id = ?" need_help_id]))
+
+(defn get-help-info [help_id helper_id]
+  (j/query postgresql-db
+           ["
+            select
+                req.help_id,
+                req.helper_id,
+                helper.helper_name,
+                help.need_help_id,
+                need_helper.need_help_name,
+                need_helper.need_help_address,
+                need_helper.need_help_tel,
+                case help.severity
+                    when 1 then '今助けてほしい！'
+                    when 2 then '今日助けてほしい！'
+                    else '今週助けてほしい！' end as severity,
+                to_char(help.help_latitude, '99D999999') as latitude,
+                to_char(help.help_longitude, '999D999999') as longitude,
+                to_char(help.help_datetime, 'YYYY/MM/DD HH24:MI:SS') as datetime,
+                case when help.helped_datetime is null then false else true end as helped
+            from
+                (select ? as help_id, ? as helper_id) req
+                left outer join helper
+                    on helper.helper_id = req.helper_id
+                left outer join help
+                    on help.help_id = req.help_id
+                left outer join need_helper
+                    on need_helper.need_help_id = help.need_help_id
+            " help_id helper_id]))

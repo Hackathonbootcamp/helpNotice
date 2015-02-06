@@ -16,8 +16,6 @@
 
 ;マッチングする際の半径（m）
 (def MATCH_RADIUS 1000)
-;管理サイトURL
-(def ADMIN_URL "http://yyyy.zz.xx")
 
 (load "http")
 (load "db")
@@ -26,9 +24,9 @@
 ;2-3-4
 (defn helpme [need_help_id severity latitude longitude]
   (do
-    (regist-help need_help_id severity latitude longitude)
-    (doseq [i (match-helper latitude longitude MATCH_RADIUS)]
-      (send-twitter-msg (:social_id i) (make-twitter-msg severity latitude longitude (get-need-helper need_help_id))))
+    (let [help_id (apply :help_id (regist-help need_help_id severity latitude longitude))]
+      (doseq [i (match-helper latitude longitude MATCH_RADIUS)]
+        (send-twitter-msg (:social_id i) (make-twitter-msg severity latitude longitude help_id (:helper_id i)))))
     (res-json (str "{\"success\": " true "}"))
     ))
 
@@ -37,7 +35,7 @@
   (do
     (let [help (get-help help_id)]
       (doseq [i (match-helper (apply :help_latitude help) (apply :help_longitude help) MATCH_RADIUS)]
-        (send-twitter-msg (:social_id i) (make-twitter-msg (apply :severity help) (apply :help_latitude help) (apply :help_longitude help) (get-need-helper (apply :need_help_id help))))))
+        (send-twitter-msg (:social_id i) (make-twitter-msg (apply :severity help) (apply :help_latitude help) (apply :help_longitude help) help_id (:helper_id i)))))
     (res-json (str "{\"success\": " true "}"))
     ))
 
@@ -45,7 +43,7 @@
 (defn notice [help_id helper_id]
   (do
     (let [help (get-help help_id) helper (get-helper helper_id)]
-      (send-twitter-msg (apply :social_id helper) (make-twitter-msg (apply :severity help) (apply :help_latitude help) (apply :help_longitude help) (get-need-helper (apply :need_help_id help)))))
+      (send-twitter-msg (apply :social_id helper) (make-twitter-msg (apply :severity help) (apply :help_latitude help) (apply :help_longitude help) help_id helper_id)))
     (res-json (str "{\"success\": " true "}"))
     ))
 
@@ -67,6 +65,8 @@
        (notice (Long/valueOf (params :help_id)) (Long/valueOf (params :helper_id))))
   (GET "/helped" {params :params}
        (helped (Long/valueOf (params :help_id)) (Long/valueOf (params :helper_id))))
+  (GET "/helpinfo" {params :params}
+       (res-json (generate-string (first (get-help-info (Long/valueOf (params :help_id)) (Long/valueOf (params :helper_id)))))))
   (route/files "/")
   (route/resources "/")
   (route/not-found "Not Found"))
