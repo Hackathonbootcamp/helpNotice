@@ -9,8 +9,13 @@
   (if (= 1 severity) "今助けてほしい！" (if (= 2 severity) "今日助けてほしい！" "今週助けてほしい！")))
 
 ; twitter用メッセージを作成
-(defn make-twitter-msg [severity latitude longitude]
-  (str (make-severity-msg severity) "\n" (get-gmurl latitude longitude) "\n" ADMIN_URL))
+(defn make-twitter-msg [severity latitude longitude need-helper]
+  (str
+   (make-severity-msg severity) "\n"
+   (apply :need_help_name need-helper) "\n"
+   (apply :need_help_tel need-helper) "\n"
+   (get-gmurl latitude longitude) "\n"
+   ADMIN_URL))
 
 (def my-creds (make-oauth-creds "2sEcph9BOK5Hk412wQ8qJaSI1"
                                 "IKHsWgt959b693MTCYc5BYMQOXsDqR4I3m9VXqW0zk7sKvyXdA"

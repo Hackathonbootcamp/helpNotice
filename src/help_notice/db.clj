@@ -1,10 +1,9 @@
 (in-ns 'help-notice.handler)
 
-; postgresql接続用
 (def postgresql-db {:subprotocol "postgresql"
-                    :subname "//ec2-174-129-1-179.compute-1.amazonaws.com:5432/d76k2v0lvos1l3?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"
-                    :user "ollzkkdgygzkti"
-                    :password "3fdgK_t5FBW2n4-yGs5_D6Xh8f"})
+                    :subname "//ec2-107-21-118-56.compute-1.amazonaws.com:5432/db5n0b7n4g0p8a?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"
+                    :user "hyydrykskvwrkw"
+                    :password "VLf448tQQ1hhW4XGB_lM4TjFRK"})
 
 (defn now []
   (c/to-sql-time (l/local-now)))
@@ -14,6 +13,10 @@
    postgresql-db
    :help
    {:need_help_id need_help_id :severity severity :help_latitude latitude :help_longitude longitude :help_datetime (now)}))
+
+(defn not-helped? [help_id]
+  (nil? (apply :helper_id (j/query postgresql-db
+           ["select helper_id from help where help_id = ?" help_id]))))
 
 (defn regist-helper [help_id helper_id]
   (j/update! postgresql-db
@@ -46,8 +49,12 @@
 
 (defn get-help [help_id]
   (j/query postgresql-db
-           ["select help_id, severity, help_latitude, help_longitude from help where help_id = ?" help_id]))
+           ["select help_id, need_help_id, severity, help_latitude, help_longitude from help where help_id = ?" help_id]))
 
 (defn get-helper [helper_id]
   (j/query postgresql-db
            ["select helper_id, helper_name, social_id from helper where helper_id = ?" helper_id]))
+
+(defn get-need-helper [need_help_id]
+  (j/query postgresql-db
+           ["select need_help_id, need_help_name, need_help_address, need_help_tel from need_helper where need_help_id = ?" need_help_id]))

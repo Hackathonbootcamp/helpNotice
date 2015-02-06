@@ -28,7 +28,7 @@
   (do
     (regist-help need_help_id severity latitude longitude)
     (doseq [i (match-helper latitude longitude MATCH_RADIUS)]
-      (send-twitter-msg (:social_id i) (make-twitter-msg severity latitude longitude)))
+      (send-twitter-msg (:social_id i) (make-twitter-msg severity latitude longitude (get-need-helper need_help_id))))
     (res-json (str "{\"success\": " true "}"))
     ))
 
@@ -37,7 +37,7 @@
   (do
     (let [help (get-help help_id)]
       (doseq [i (match-helper (apply :help_latitude help) (apply :help_longitude help) MATCH_RADIUS)]
-        (send-twitter-msg (:social_id i) (make-twitter-msg (apply :severity help) (apply :help_latitude help) (apply :help_longitude help)))))
+        (send-twitter-msg (:social_id i) (make-twitter-msg (apply :severity help) (apply :help_latitude help) (apply :help_longitude help) (get-need-helper (apply :need_help_id help))))))
     (res-json (str "{\"success\": " true "}"))
     ))
 
@@ -45,16 +45,17 @@
 (defn notice [help_id helper_id]
   (do
     (let [help (get-help help_id) helper (get-helper helper_id)]
-      (send-twitter-msg (apply :social_id helper) (make-twitter-msg (apply :severity help) (apply :help_latitude help) (apply :help_longitude help))))
+      (send-twitter-msg (apply :social_id helper) (make-twitter-msg (apply :severity help) (apply :help_latitude help) (apply :help_longitude help) (get-need-helper (apply :need_help_id help)))))
     (res-json (str "{\"success\": " true "}"))
     ))
 
 ;5
 (defn helped [help_id helper_id]
-  (do
-    (regist-helper help_id helper_id)
-    (res-json (str "{\"success\": " true "}"))
-    ))
+  (if (not-helped? help_id)
+    (do
+      (regist-helper help_id helper_id)
+      (res-json (str "{\"success\": " true "}")))
+    (res-json (str "{\"success\": " false "}"))))
 
 (defroutes app-routes
   (GET "/" [] "running")
@@ -66,6 +67,8 @@
        (notice (Long/valueOf (params :help_id)) (Long/valueOf (params :helper_id))))
   (GET "/helped" {params :params}
        (helped (Long/valueOf (params :help_id)) (Long/valueOf (params :helper_id))))
+  (route/files "/")
+  (route/resources "/")
   (route/not-found "Not Found"))
 
 (def app
