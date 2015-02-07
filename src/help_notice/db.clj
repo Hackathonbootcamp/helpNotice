@@ -71,9 +71,9 @@
                 need_helper.need_help_address,
                 need_helper.need_help_tel,
                 case help.severity
-                    when 1 then '今助けてほしい！'
-                    when 2 then '今日助けてほしい！'
-                    else '今週助けてほしい！' end as severity,
+                    when 1 then '今助けて！'
+                    when 2 then '今日助けて！'
+                    else '今週助けて！' end as severity,
                 to_char(help.help_latitude, '99D999999') as latitude,
                 to_char(help.help_longitude, '999D999999') as longitude,
                 to_char(help.help_datetime, 'YYYY/MM/DD HH24:MI:SS') as datetime,

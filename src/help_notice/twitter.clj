@@ -2,7 +2,7 @@
 
 ; 緊急度メッセージを作成
 (defn make-severity-msg [severity]
-  (if (= 1 severity) "今助けてほしい！" (if (= 2 severity) "今日助けてほしい！" "今週助けてほしい！")))
+  (if (= 1 severity) "今助けて！" (if (= 2 severity) "今日助けて！" "今週助けて！")))
 
 ; 助けますURLを作成
 (defn make-helped-url [help_id helper_id]
