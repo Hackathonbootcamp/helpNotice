@@ -59,7 +59,7 @@
   (j/query postgresql-db
            ["select need_help_id, need_help_name, need_help_address, need_help_tel from need_helper where need_help_id = ?" need_help_id]))
 
-(defn get-help-info [help_id helper_id]
+(defn get-help-info [help_id helper_id key]
   (j/query postgresql-db
            ["
             select
@@ -77,13 +77,29 @@
                 to_char(help.help_latitude, '99D999999') as latitude,
                 to_char(help.help_longitude, '999D999999') as longitude,
                 to_char(help.help_datetime, 'YYYY/MM/DD HH24:MI:SS') as datetime,
-                case when help.helped_datetime is null then false else true end as helped
+                case when help.helped_datetime is null then false else true end as helped,
+                msg_sended.key
             from
-                (select ? as help_id, ? as helper_id) req
+                (select ? as help_id, ? as helper_id, ?::text as key) req
                 left outer join helper
                     on helper.helper_id = req.helper_id
                 left outer join help
                     on help.help_id = req.help_id
                 left outer join need_helper
                     on need_helper.need_help_id = help.need_help_id
-            " help_id helper_id]))
+                left outer join msg_sended
+                    on msg_sended.help_id = req.help_id
+                    and msg_sended.helper_id = req.helper_id
+                    and msg_sended.key = req.key
+            " help_id helper_id key]))
+
+;create table msg_sended (
+;id bigserial,
+;help_id bigint,
+;helper_id bigint,
+;key text)
+(defn regist-sended [help_id helper_id key]
+  (j/insert!
+   postgresql-db
+   :msg_sended
+   {:help_id help_id :helper_id helper_id :key key}))

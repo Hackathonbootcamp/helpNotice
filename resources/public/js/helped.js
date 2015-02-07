@@ -1,11 +1,13 @@
 var help_id;
 var helper_id;
+var key;
 $(document).ready(function(){
   // パラメータ処理
   var params = getUrlVars();
-  if (params['help_id'] && params['helper_id'])  {
+  if (params['help_id'] && params['helper_id'] && params['key'])  {
     help_id = params['help_id'];
     helper_id = params['helper_id'];
+    key = params['key'];
     getHelpInfo();
   } else {
     swal("不正な画面表示です！")
@@ -30,13 +32,13 @@ function getUrlVars()
 }
 
 function getHelpInfo() {
-  var url = "/helpinfo?help_id=" + help_id + "&helper_id=" + helper_id;
+  var url = "/helpinfo?help_id=" + help_id + "&helper_id=" + helper_id + "&key=" + key;
   $.ajax({
     type: 'GET',
     url: url,
     dataType: 'json',
     success: function(json){
-      if (!json.datetime) {
+      if (!json.datetime || !json.key) {
         swal("不正な画面表示です！")
         $(".container-narrow").empty();
         $("body").append("<h1>Error</h1>");
