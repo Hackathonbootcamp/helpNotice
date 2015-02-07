@@ -97,7 +97,7 @@
 ;id bigserial,
 ;help_id bigint,
 ;helper_id bigint,
-;key text)
+;key varchar(256))
 (defn regist-sended [help_id helper_id key]
   (j/insert!
    postgresql-db

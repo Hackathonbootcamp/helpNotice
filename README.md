@@ -6,7 +6,7 @@ http://helpnotice.herokuapp.com/
 
 ## 画面
 
-### /helped.html?help_id&helper_id
+### /helped.html?help_id&helper_id&key
 
 * 助けます登録画面
 
@@ -43,7 +43,7 @@ http://helpnotice.herokuapp.com/
 応答
 <pre>{"success": true}</pre>
 
-### /helpinf?help_id&helper_id
+### /helpinf?help_id&helper_id&key
 
 * ヘルプ案件情報を取得
 
@@ -59,7 +59,8 @@ http://helpnotice.herokuapp.com/
  "latitude": string,
  "longitude": string,
  "datetime": string,
- "helped": boolean
+ "helped": boolean,
+ "key": text
 }
 </pre>
 
