@@ -103,3 +103,10 @@
    postgresql-db
    :msg_sended
    {:help_id help_id :helper_id helper_id :key key}))
+
+;create table system_val (
+;key varchar(256) primary key,
+;val varchar(256))
+(defn get-system-val [key]
+  (apply :val (j/query postgresql-db
+           ["select val from system_val where key = ?" key])))

@@ -14,11 +14,11 @@
    (make-severity-msg severity) "\n"
    (make-helped-url help_id helper_id key)))
 
-(def my-creds (make-oauth-creds "2sEcph9BOK5Hk412wQ8qJaSI1"
-                                "IKHsWgt959b693MTCYc5BYMQOXsDqR4I3m9VXqW0zk7sKvyXdA"
-                                "2931060518-ICKKL7AoYhMoCjuztp5f4UVpWmGNMiAItzAwWm1"
-                                "CXJECGtp9SW7wA3smz4Gm5ewdm0PQ1VA2gCouBcHC3XDc"))
-
-; clojureybotから指定ユーザに対してメッセージを送信する
+; 指定ユーザに対してメッセージを送信する
 (defn send-twitter-msg [toname text]
-  (:code (:status (direct-messages-new :oauth-creds my-creds :params {:screen_name toname :text text}))))
+  (:code (:status (direct-messages-new
+                   :oauth-creds (make-oauth-creds (get-system-val "FROM_CONSUMER_KEY")
+                                                  (get-system-val "FROM_CONSUMER_SECRET")
+                                                  (get-system-val "FROM_ACCESS_TOKEN")
+                                                  (get-system-val "FROM_ACCESS_TOKEN_SECRET"))
+                   :params {:screen_name toname :text text}))))

@@ -14,11 +14,6 @@
   (:require [clj-time.local :as l])
   (:require [clj-time.coerce :as c]))
 
-;マッチングする際の半径（m）
-(def MATCH_RADIUS 1000)
-;key長
-(def KEY_LENGTH 10)
-
 (load "rnd")
 (load "http")
 (load "db")
@@ -28,8 +23,8 @@
 (defn helpme [need_help_id severity latitude longitude]
   (do
     (let [help_id (apply :help_id (regist-help need_help_id severity latitude longitude))]
-      (doseq [i (match-helper latitude longitude MATCH_RADIUS)]
-        (let [key (rand-str KEY_LENGTH)]
+      (doseq [i (match-helper latitude longitude (Integer/valueOf(get-system-val "MATCH_RADIUS")))]
+        (let [key (rand-str (Integer/valueOf(get-system-val "KEY_LENGTH")))]
           (regist-sended help_id (:helper_id i) key)
           (send-twitter-msg (:social_id i) (make-twitter-msg severity latitude longitude help_id (:helper_id i) key)))))
     (res-json (str "{\"success\": " true "}"))
@@ -39,8 +34,8 @@
 (defn match [help_id]
   (do
     (let [help (get-help help_id)]
-      (doseq [i (match-helper (apply :help_latitude help) (apply :help_longitude help) MATCH_RADIUS)]
-        (let [key (rand-str KEY_LENGTH)]
+      (doseq [i (match-helper (apply :help_latitude help) (apply :help_longitude help) (Integer/valueOf(get-system-val "MATCH_RADIUS")))]
+        (let [key (rand-str (Integer/valueOf(get-system-val "KEY_LENGTH")))]
           (regist-sended help_id (:helper_id i) key)
           (send-twitter-msg (:social_id i) (make-twitter-msg (apply :severity help) (apply :help_latitude help) (apply :help_longitude help) help_id (:helper_id i) key)))))
     (res-json (str "{\"success\": " true "}"))
@@ -49,7 +44,7 @@
 ;4
 (defn notice [help_id helper_id]
   (do
-    (let [help (get-help help_id) helper (get-helper helper_id) key (rand-str KEY_LENGTH)]
+    (let [help (get-help help_id) helper (get-helper helper_id) key (rand-str (Integer/valueOf(get-system-val "KEY_LENGTH")))]
       (do
         (regist-sended help_id helper_id key)
         (send-twitter-msg (apply :social_id helper) (make-twitter-msg (apply :severity help) (apply :help_latitude help) (apply :help_longitude help) help_id helper_id key))))
