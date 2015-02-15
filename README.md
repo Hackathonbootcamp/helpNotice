@@ -47,13 +47,6 @@ http://helpnotice.herokuapp.com/
 
 * ヘルプ案件情報を取得
 
-### /friend
-
-* clojureybotをフォローしているユーザに対してフォロー返しを行う
-
-応答
-<pre>{"success": true}</pre>
-
 応答
 <pre>
 {"help_id": long,
@@ -70,6 +63,14 @@ http://helpnotice.herokuapp.com/
  "key": text
 }
 </pre>
+
+### /friend
+
+* clojureybotをフォローしているユーザに対してフォロー返しを行う
+
+応答
+<pre>{"success": true}</pre>
+
 
 ## License
 
