@@ -59,6 +59,15 @@
       (res-json (str "{\"success\": " true "}")))
     (res-json (str "{\"success\": " false "}"))))
 
+;friend
+(defn minus [a b]
+  (filter (fn [x] (not-any? #(= % x) b)) a))
+(defn friend []
+  (do
+    (doseq [x (minus (get-followers-ids) (get-friends-ids))]
+      (regist-friend x))
+    (res-json (str "{\"success\": " true "}"))))
+
 (defroutes app-routes
   (GET "/" [] "running")
   (GET "/helpme" {params :params}
@@ -71,6 +80,8 @@
        (helped (Long/valueOf (params :help_id)) (Long/valueOf (params :helper_id))))
   (GET "/helpinfo" {params :params}
        (res-json (generate-string (first (get-help-info (Long/valueOf (params :help_id)) (Long/valueOf (params :helper_id)) (params :key))))))
+  (GET "/friend" {params :params}
+       (friend))
   (route/files "/")
   (route/resources "/")
   (route/not-found "Not Found"))

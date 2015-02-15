@@ -22,3 +22,21 @@
                                                   (get-system-val "FROM_ACCESS_TOKEN")
                                                   (get-system-val "FROM_ACCESS_TOKEN_SECRET"))
                    :params {:screen_name toname :text text}))))
+
+(defn get-followers-ids[]
+  (:ids (:body (followers-ids :oauth-creds (make-oauth-creds (get-system-val "FROM_CONSUMER_KEY")
+                                                  (get-system-val "FROM_CONSUMER_SECRET")
+                                                  (get-system-val "FROM_ACCESS_TOKEN")
+                                                  (get-system-val "FROM_ACCESS_TOKEN_SECRET"))))))
+
+(defn get-friends-ids[]
+  (:ids (:body (friends-ids :oauth-creds (make-oauth-creds (get-system-val "FROM_CONSUMER_KEY")
+                                                  (get-system-val "FROM_CONSUMER_SECRET")
+                                                  (get-system-val "FROM_ACCESS_TOKEN")
+                                                  (get-system-val "FROM_ACCESS_TOKEN_SECRET"))))))
+
+(defn regist-friend [user_id]
+  (friendships-create :oauth-creds (make-oauth-creds (get-system-val "FROM_CONSUMER_KEY")
+                                                  (get-system-val "FROM_CONSUMER_SECRET")
+                                                  (get-system-val "FROM_ACCESS_TOKEN")
+                                                  (get-system-val "FROM_ACCESS_TOKEN_SECRET")) :params {:user_id user_id}))
